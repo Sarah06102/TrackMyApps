@@ -7,6 +7,13 @@
 
     </head>
     <body>
+        <!-- Sign-in prompt -->
+        <div id="not-logged-in" style="display: none;">
+            <p>Please sign in to use this extension.</p>
+            <button id="chrome-signin-btn">Sign in with Google</button>
+            <button id="logout-btn" style="margin-top: 10px;">Logout</button>
+        </div>
+        <!-- Main content -->
         <div id = "main-content" class = "main-content">
             <h1>TrackMyApps</h1>
             <p>Click to save this job:</p>
@@ -15,6 +22,9 @@
         <div id = "success-msg" class = "success-msg">
             <img src="success.svg" alt="Success">
             <p>Job saved!</p>
+        </div>
+        <div id="error-msg" style="display: none; color: red;">
+            <p>Could not get job info. Please try again.</p>
         </div>
     </body>    
 </html>

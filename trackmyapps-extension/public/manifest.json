@@ -2,7 +2,12 @@
     "manifest_version": 3,
     "name": "TrackMyApps",
     "version": "1.0",
+    "oauth2": {
+        "client_id": "693498453789-o4h4ere1bksc1m17k7vsa20mkml9i6qj.apps.googleusercontent.com",
+        "scopes": ["email", "profile", "openid"]
+},
     "permissions": [
+        "identity",
         "activeTab",
         "scripting"
     ],
@@ -18,5 +23,6 @@
         "matches": ["<all_urls>"], 
         "js": ["content.js"]
         }
+    
   ]
 }

@@ -1,0 +1,11 @@
+{
+    "css.lint.unknownAtRules": "ignore",
+    "tailwindCSS.includeLanguages": {
+      "plaintext": "html",
+      "javascript": "javascript",
+      "javascriptreact": "javascript"
+    },
+    "editor.quickSuggestions": {
+      "strings": true
+    }
+  }
