@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const userRef = doc(db, 'users', currentUser.uid);
                     const jobsRef = collection(userRef, 'jobs');        
                         
+                    console.log("✅ Saving job for user:", currentUser.uid);
                     addDoc(jobsRef, {
                         jobTitle: response.jobTitle,
                         companyName: response.companyName,
