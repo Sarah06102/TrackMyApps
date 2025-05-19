@@ -8,7 +8,6 @@ const NavBar = () => {
                 <div className="flex items-center space-x-6 text-white font-medium h-full">
                     <Link className= "rounded-xl h-full px-4 py-2 hover:bg-sky-400 transition-all duration-300 ease-in-out" to='/'>Home</Link>
                     <Link className= "rounded-xl h-full px-4 py-2 hover:bg-sky-400 transition-all duration-300 ease-in-out" to='/login'>Login</Link>
-                    <Link className= "rounded-xl h-full px-4 py-2 hover:bg-sky-400 transition-all duration-300 ease-in-out" to='/signup'>Sign Up</Link>
                     <Link className= "rounded-xl h-full px-4 py-2 hover:bg-sky-400 transition-all duration-300 ease-in-out" to='/dashboard'>Dashboard</Link>
                 </div>
             </div>
