@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from "../../../firebase.js";
 import NavBar from '../../components/nav-bar.jsx';
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
         const [email, setEmail] = useState('');
@@ -10,11 +11,13 @@ const SignUp = () => {
         const [lastName, setLastName] = useState('');
         const [password, setPassword] = useState('');
         const [showPassword, setShowPassword] = useState(false);
+        const navigate = useNavigate();
         const signUp = (e) => {
             e.preventDefault();
             createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 console.log(userCredential);
+                navigate('/dashboard');
             }).catch((error) => {
                 console.log(error);
             });   
@@ -22,7 +25,7 @@ const SignUp = () => {
 
         
     return (
-        <div>
+        <div className="min-h-screen bg-gradient-to-r from-sky-100 to-blue-50">
             <NavBar />
             <div className="min-h-screen flex items-center justify-center pt-20 px-4">
                 <div className="w-full max-w-md bg-white p-8 rounded shadow"> 
