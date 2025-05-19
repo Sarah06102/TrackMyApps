@@ -10,6 +10,7 @@ const Login = () => {
         const [email, setEmail] = useState('');
         const [password, setPassword] = useState('');
         const [showPassword, setShowPassword] = useState(false);
+        const [error, setError] = useState('');
         const navigate = useNavigate();
         const logIn = (e) => {
             e.preventDefault();
@@ -18,7 +19,29 @@ const Login = () => {
                 console.log(userCredential);
                 navigate('/dashboard');
             }).catch((error) => {
-                console.log(error);
+                console.log('Firebase error code:', error.code);
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        setError('No account found with that email.');
+                        break;
+                    case 'auth/wrong-password':
+                        setError('Incorrect password. Please try again.');
+                        break;
+                    case 'auth/invalid-email':
+                        setError('Please enter a valid email address.');
+                        break;
+                    case 'auth/too-many-requests':
+                        setError('Too many failed attempts. Please try again later.');
+                        break;
+                    case 'auth/internal-error':
+                        setError('An internal error occurred. Try again shortly.');
+                        break;
+                    case 'auth/invalid-credential':
+                        setError('Invalid email or password.');
+                        break;
+                    default:
+                        setError('Login failed. Please try again.');
+                }
             });   
         }
         
@@ -40,6 +63,9 @@ const Login = () => {
                                 {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                             </button>
                         </div>
+                        {error && (
+                            <p className="text-red-600 text-sm text-center -mt-2">{error}</p>
+                        )}
                             <button className="w-full bg-sky-600 text-white py-2 rounded-xl hover:bg-sky-700 transition duration-300" type="submit">Login</button>
                         <div className="mt-4 text-sm text-center">
                             <p>New to TrackMyApps?<Link className= "h-full px-1 py-2 text-sky-500 underline hover:text-purple-800 transition-all duration-300 ease-in-out" to='/signup'>Create An Account Here</Link>

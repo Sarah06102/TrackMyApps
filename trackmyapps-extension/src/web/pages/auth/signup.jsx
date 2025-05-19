@@ -19,7 +19,26 @@ const SignUp = () => {
                 console.log(userCredential);
                 navigate('/dashboard');
             }).catch((error) => {
-                console.log(error);
+                console.log('Signup error code:', error.code);
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        setError('An account with this email already exists.');
+                        break;
+                    case 'auth/invalid-email':
+                        setError('Please enter a valid email address.');
+                        break;
+                    case 'auth/weak-password':
+                        setError('Password should be at least 6 characters.');
+                        break;
+                    case 'auth/operation-not-allowed':
+                        setError('Sign-up is currently disabled. Contact support.');
+                        break;
+                    case 'auth/network-request-failed':
+                        setError('Network error. Please try again later.');
+                        break;
+                    default:
+                        setError('Sign-up failed. Please try again.');
+                }
             });   
         }
 
@@ -33,11 +52,11 @@ const SignUp = () => {
                     <form className="space-y-4" onSubmit={signUp}>
                         <div>
                             <label className="block mb-1 font-medium" htmlFor="firstName">First Name</label>
-                            <input placeholder="Enter your first name" className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500" type="email" value= {firstName} onChange={(e) => setFirstName(e.target.value)} required />
+                            <input placeholder="Enter your first name" className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500" type="text" value= {firstName} onChange={(e) => setFirstName(e.target.value)} required />
                         </div>
                         <div>
                             <label className="block mb-1 font-medium" htmlFor="lastName">Last Name:</label>
-                            <input placeholder="Enter your last name" className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500" type="email" value= {lastName} onChange={(e) => setLastName(e.target.value)} required />
+                            <input placeholder="Enter your last name" className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500" type="text" value= {lastName} onChange={(e) => setLastName(e.target.value)} required />
                         </div>
                         <div>
                             <label className="block mb-1 font-medium" htmlFor="email">Email:</label>
@@ -45,10 +64,11 @@ const SignUp = () => {
                         </div>
                         <div className="relative w-full">
                             <label className="block mb-1 font-medium" htmlFor="password">Password:</label>
-                            <input type={showPassword ? "text" : "password"} placeholder="Enter your password" className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                            <input type={showPassword ? "text" : "password"} placeholder="Enter your password" className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
                             <button type="button" onClick={() => setShowPassword((prev) => !prev)} className="absolute right-4 mt-8 -translate-y-1/2 text-gray-600 hover:text-sky-500">
                                 {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                             </button>
+                            <p className="text-sm text-gray-500 mt-1">Password must be at least 6 characters long.</p>
                         </div>
                         <button className="w-full bg-sky-600 text-white py-2 rounded-xl hover:bg-sky-700 transition duration-300" type="submit">Sign Up</button>
                     </form>

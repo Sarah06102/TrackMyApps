@@ -15,6 +15,10 @@ const STATUS = ["Saved", "Applied", "Interview", "Offer", "Rejected"];
 const Dashboard = () => {
     const [jobs, setJobs] = useState([]);
     const navigate = useNavigate();
+    const [statusFilter, setStatusFilter] = useState('');
+    const [appliedStatusFilter, setAppliedStatusFilter] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+
 
     const logOut = async () => {
         try {
@@ -62,10 +66,18 @@ const Dashboard = () => {
         }
     };
 
+    const filteredJobs = jobs.filter(job => {
+        const matchesSearch = job.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              job.jobTitle.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = appliedStatusFilter ? job.status === appliedStatusFilter : true;
+        return matchesSearch && matchesStatus;
+      });
+
+
     return (
         <div className="min-h-screen bg-gray-50">
             <NavBar />
-            <div className="max-w-[90%] mx-auto p-6">
+            <div className="max-w-[90%] mx-auto pt-20 p-6">
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight mb-2 ml-6">Dashboard</h1>
                     <p className="text-sm text-gray-500">Your saved job applications at a glance</p>
@@ -78,7 +90,31 @@ const Dashboard = () => {
                         )}
                     </div>
                 </div>
-                <JobsTable jobs={jobs} setJobs={setJobs} />
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-6 mb-6">
+                    <input type="text" placeholder="Search by company or job title" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="px-4 py-2 border rounded-lg w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-500"/>
+
+                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="px-4 py-2 border rounded-lg w-full md:w-1/4 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        <option value="">Filter by Status</option>
+                        {STATUS.map(status => (
+                            <option key={status} value={status}>{status}</option>
+                        ))}
+                    </select>
+                    <button onClick={() => setAppliedStatusFilter(statusFilter)} className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg">
+                        Apply Filters
+                    </button>
+
+                    {appliedStatusFilter && (
+                        <button onClick={() => {
+                            setAppliedStatusFilter(false);
+                            setStatusFilter('');
+                        }}
+                        className="text-sm text-gray-600 underline"
+                        >
+                        Clear Filters
+                        </button>
+                    )}
+                    </div>
+                <JobsTable jobs={filteredJobs} setJobs={setJobs} />
             </div>
         </div>  
     );
