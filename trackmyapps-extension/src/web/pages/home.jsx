@@ -44,7 +44,10 @@ const Home = () => {
                 </p>
                 <div className="flex justify-center items-center mt-8 gap-4">
                     <h5 className="text-2xl font-semibold text-gray-700">Get Started Today</h5>
-                    <Link className= "rounded-2xl font-semibold px-4 py-2 bg-sky-400 hover:bg-sky-300 transition-all duration-300 ease-in-out" to='/signup'>Create An Account</Link>
+                    <Link className= "bg-sky-600 text-white px-6 py-3 rounded-full text-lg font-semibold shadow hover:bg-sky-700 transition" to='/signup'>Create An Account</Link>
+                    <a href="https://chrome.google.com/webstore/detail/your-extension-id" className="bg-white border border-sky-600 text-sky-600 px-6 py-3 rounded-full text-lg font-semibold hover:bg-sky-50 transition">
+                        Install Chrome Extension
+                    </a>
                 </div>
             </div>
             
