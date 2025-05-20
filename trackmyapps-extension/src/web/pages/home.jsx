@@ -63,7 +63,7 @@ const Home = () => {
                     {[
                         {
                         title: "One-Click Save",
-                        desc: "Instantly save jobs from platforms like LinkedIn or Indeed using our Chrome extension."
+                        desc: "Instantly save jobs from platforms like LinkedIn using the TrackMyApps Chrome extension."
                         },
                         {
                         title: "Visual Dashboard",
