@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "TrackMyApps",
+  "version": "1.0",
+  "oauth2": {
+    "client_id": "693498453789-eud432ec36kplsm1lgmfbcjmguusttn1.apps.googleusercontent.com",
+    "scopes": ["email", "profile", "openid"]
+  },
+  "permissions": [
+    "identity",
+    "identity.email",
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
