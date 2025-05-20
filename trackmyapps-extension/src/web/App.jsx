@@ -8,13 +8,11 @@ import './index.css'
 function App() {
   return (
     <>
-    
       <NavBar />
       <Login />
       <SignUp />
       <authDetails />
       <Dashboard />
-      
     </>
   )
 }

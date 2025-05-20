@@ -4,6 +4,8 @@ import { auth } from "../../../firebase.js";
 import NavBar from '../../components/nav-bar.jsx';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
 
 const SignUp = () => {
         const [email, setEmail] = useState('');
@@ -12,36 +14,37 @@ const SignUp = () => {
         const [password, setPassword] = useState('');
         const [showPassword, setShowPassword] = useState(false);
         const navigate = useNavigate();
+        
         const signUp = (e) => {
             e.preventDefault();
             createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                console.log(userCredential);
+              .then(async (userCredential) => {
+                const user = userCredential.user;
+    
+                await setDoc(doc(db, "users", user.uid), {
+                    firstName,
+                    lastName,
+                    email: user.email,
+                });
+          
                 navigate('/dashboard');
-            }).catch((error) => {
-                console.log('Signup error code:', error.code);
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        setError('An account with this email already exists.');
+              }).catch ((error) => {
+                    console.log('Signup error code:', error.code);
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                        alert('An account with this email already exists.');
                         break;
-                    case 'auth/invalid-email':
-                        setError('Please enter a valid email address.');
+                        case 'auth/invalid-email':
+                        alert('Please enter a valid email address.');
                         break;
-                    case 'auth/weak-password':
-                        setError('Password should be at least 6 characters.');
+                        case 'auth/weak-password':
+                        alert('Password should be at least 6 characters.');
                         break;
-                    case 'auth/operation-not-allowed':
-                        setError('Sign-up is currently disabled. Contact support.');
-                        break;
-                    case 'auth/network-request-failed':
-                        setError('Network error. Please try again later.');
-                        break;
-                    default:
-                        setError('Sign-up failed. Please try again.');
-                }
-            });   
-        }
-
+                        default:
+                        alert('Sign-up failed. Please try again.');
+                    }
+                });
+            };
         
     return (
         <div className="min-h-screen bg-gradient-to-r from-sky-100 to-blue-50">

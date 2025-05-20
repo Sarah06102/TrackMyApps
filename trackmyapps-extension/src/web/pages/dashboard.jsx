@@ -1,4 +1,4 @@
-import { doc, collection, getDocs, onSnapshot } from "firebase/firestore";
+import { doc, collection, getDocs, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import React, { useEffect, useState, useRef } from 'react';
 import NavBar from '../components/nav-bar.jsx';
@@ -16,9 +16,24 @@ const Dashboard = () => {
     const [jobs, setJobs] = useState([]);
     const navigate = useNavigate();
     const [statusFilter, setStatusFilter] = useState('');
+    const [userData, setUserData] = useState(null);
     const [appliedStatusFilter, setAppliedStatusFilter] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+          if (!user) return;
+      
+          const userRef = doc(db, "users", user.uid);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            setUserData(userSnap.data());
+          }
+        });
+      
+        return () => unsubscribe();
+    }, []);
 
     const logOut = async () => {
         try {
@@ -79,7 +94,7 @@ const Dashboard = () => {
             <NavBar />
             <div className="max-w-[90%] mx-auto pt-20 p-6">
                 <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight mb-2 ml-6">Dashboard</h1>
+                    <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight mb-2 ml-6">Hi{userData?.firstName ? `, ${userData.firstName}` : ''}! Welcome to your Dashboard</h1>
                     <p className="text-sm text-gray-500">Your saved job applications at a glance</p>
                     <div className="flex flex-col gap-3 items-end m-6">
                         <button onClick={logOut} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Logout</button>
@@ -130,6 +145,7 @@ const JobsTable = ({ jobs, setJobs }) => {
       useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) return;
+            
             const jobsQuery = query(
                 collection(db, "users", user.uid, "jobs"),
                 orderBy("dateSaved", "desc")
