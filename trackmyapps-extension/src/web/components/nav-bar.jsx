@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { DashboardNavBar } from './dashboard-nav-bar';
+import { LoginAndSignupNavBar } from './login-signup-nav-bar';
 
 const NavBar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const isDashboard = location.pathname.startsWith('/dashboard');
-    const isProfile = location.pathname.startsWith('/profile');
-    
+    const isLogin = location.pathname.startsWith('/login');
+    const isSignUp = location.pathname.startsWith('/signup')
+
     const handleHomeClick = () => {
         if (location.pathname === '/') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -16,8 +18,12 @@ const NavBar = () => {
         }
     };
       
-    if (isDashboard || isProfile) {
+    if (isDashboard) {
         return <DashboardNavBar />;
+    }
+
+    if (isLogin || isSignUp) {
+        return <LoginAndSignupNavBar />
     }
 
     return (

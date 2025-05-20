@@ -95,9 +95,7 @@ const Dashboard = () => {
             <div className="max-w-[90%] mx-auto pt-20 p-6">
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight mb-2 ml-6">Hi{userData?.firstName ? `, ${userData.firstName}` : ''}! Welcome to your Dashboard</h1>
-                    <p className="text-sm text-gray-500">Your saved job applications at a glance</p>
                     <div className="flex flex-col gap-3 items-end m-6">
-                        <button onClick={logOut} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Logout</button>
                         {jobs.length > 0 && (
                             <button onClick={clearAllJobs} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
                                 Clear All Jobs

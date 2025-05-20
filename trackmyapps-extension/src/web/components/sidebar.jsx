@@ -82,7 +82,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
           <button
             onClick={() => {
               localStorage.setItem('userLoggedOut', 'true');
-              handleClick('/');
+              handleClick('/login');
             }}
             className="flex items-center gap-3 text-white text-lg font-medium hover:bg-sky-600 px-4 py-2 rounded-lg transition"
           >
