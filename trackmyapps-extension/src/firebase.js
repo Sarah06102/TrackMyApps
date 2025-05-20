@@ -15,8 +15,9 @@ const firebaseConfig = {
   storageBucket: "trackmyapps-2636e.firebasestorage.app",
   messagingSenderId: "693498453789",
   appId: "1:693498453789:web:3ea65bfa5507c1720a0bf4",
-  measurementId: "G-HRJ4251BQY"
+  measurementId: "G-HRJ4251BQY",
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

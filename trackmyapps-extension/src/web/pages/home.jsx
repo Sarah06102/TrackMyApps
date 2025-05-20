@@ -36,15 +36,18 @@ const Home = () => {
             <NavBar />
             {/* Home Section */}
             <div id="Home" className="fade-in-start duration-700 min-h-screen flex flex-col justify-center items-center text-center px-4">
-                <h1 className="text-6xl md:text-6xl font-bold text-center text-gray-800 mb-4">
+                <h1 className="text-5xl md:text-6xl font-bold text-center text-gray-800 mb-4">
                     Welcome to <span className="text-sky-600">TrackMyApps</span>
                 </h1>
-                <p className="text-lg md:text-2xl text-gray-600 text-center max-w-xl mx-auto">
+                <p className="mt-4 text-lg md:text-xl text-gray-600 text-center max-w-xl mx-auto">
                     Organize and track your job applications seamlessly.
                 </p>
-                <div className="flex justify-center items-center mt-8 gap-4">
-                    <h5 className="text-2xl font-semibold text-gray-700">Get Started Today</h5>
-                    <Link className= "rounded-2xl font-semibold px-4 py-2 bg-sky-400 hover:bg-sky-300 transition-all duration-300 ease-in-out" to='/signup'>Create An Account</Link>
+                <div className="flex items-center space-y-4 mt-6 md:flex-row md:space-y-0 md:space-x-4 md:space-y-5">
+                    <h5 className="mt-4 text-2xl font-semibold text-gray-700">Get Started Today</h5>
+                    <Link className= "bg-sky-600 text-white px-6 py-3 rounded-full text-lg font-semibold shadow hover:bg-sky-700 transition" to='/signup'>Create An Account</Link>
+                    <a class="bg-white border border-sky-600 text-sky-600 px-6 py-3 rounded-full text-lg font-semibold hover:bg-sky-50 transition" href="https://chrome.google.com/webstore/detail/your-extension-id" target="_blank">
+                        <button>Install Chrome Extension</button>
+                    </a>
                 </div>
             </div>
             

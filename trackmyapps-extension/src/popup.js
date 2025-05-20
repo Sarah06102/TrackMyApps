@@ -46,18 +46,20 @@ const chromeLoginToFirebase = () => {
             }
 
             console.log("New token retrieved:", token);
-
+              
             const credential = GoogleAuthProvider.credential(null, token);
 
             signInWithCredential(auth, credential)
                 .then((result) => {
-                    console.log("Firebase login:", result.user.email);
-                    currentUser = result.user;
-                    updateUI(result.user);
+                console.log("Firebase login successful:", result.user);
+                currentUser = result.user;
+                updateUI(result.user);
                 })
                 .catch((error) => {
-                    console.error("Firebase sign-in error:", error.message || error);
+                console.error("Firebase sign-in error:", error.code, error.message, error.customData);
                 });
+            
+              
         });
     }
 };
