@@ -71,21 +71,12 @@ export const Sidebar = ({ isOpen, onClose }) => {
             Dashboard
           </button>
 
-          <button
-            onClick={() => handleClick('/')}
-            className="flex items-center gap-3 text-white text-lg font-medium hover:bg-sky-600 px-4 py-2 rounded-lg transition"
-          >
+          <button onClick={() => handleClick('/')} className="flex items-center gap-3 text-white text-lg font-medium hover:bg-sky-600 px-4 py-2 rounded-lg transition">
             <FaHome />
             Home
           </button>
 
-          <button
-            onClick={() => {
-              localStorage.setItem('userLoggedOut', 'true');
-              handleClick('/login');
-            }}
-            className="flex items-center gap-3 text-white text-lg font-medium hover:bg-sky-600 px-4 py-2 rounded-lg transition"
-          >
+          <button onClick={() => { localStorage.setItem('userLoggedOut', 'true'); handleClick('/login'); }} className="flex items-center gap-3 text-white text-lg font-medium hover:bg-sky-600 px-4 py-2 rounded-lg transition">
             <FaSignOutAlt />
             Logout
           </button>

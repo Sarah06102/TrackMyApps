@@ -1,0 +1,175 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#popup-container {
+  background-color: white;
+  border-radius: 15px;
+  padding: 30px 40px;
+  text-align: center;
+  width: 360px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#popup-container > * {
+  width: 100%;
+}
+
+h1 {
+  color: #202124;
+  font-size: 20px;
+  margin: 0;
+  padding: 10px 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+p {
+  margin: 12px 0;
+  text-align: center;
+  font-size: 14px;
+}
+
+button {
+  background-color: #4285F4;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: block;
+  margin: 10px auto;
+  width: 80%;
+}
+
+button:hover {
+  background-color: #3367D6;
+  transform: translateY(-1px);
+}
+
+img {
+  width: 64px;
+  height: 64px;
+  display: block;
+  margin: 0 auto;
+}
+
+#success-msg {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: fadeInScale 0.3s ease-in-out forwards;
+}
+
+#error-msg {
+  display: none;
+  color: #d93025;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+#loading-state {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.fade-in {
+  animation: fadeInScale 0.2s ease forwards;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.4s ease forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+#success-msg img {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 12px;
+}
+
+#success-msg p {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  box-sizing: border-box;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.btn-primary {
+  background-color: #4285f4;
+  color: white;
+  font-weight: bold;
+  padding: 12px;
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #357ae8;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TrackMyApps</title>
+  <script type="module" src="/src/popup.js"></script>
+  <link rel="stylesheet" href="/src/popup.css" />
+</head>
+<body>
+    <div id="popup-container" class="main-content">
+        <h1>TrackMyApps</h1>
+      
+        <!-- LOGIN FORM -->
+        <div id="login-container" style="display: block;">
+          <p style="margin-bottom: 16px; color: #666; font-size: 14px; text-align: center;">
+            Please log in with the same account used on your dashboard.
+          </p>
+          <input id="email" type="email" placeholder="Email" />
+          <input id="password" type="password" placeholder="Password" />
+          <button id="login-btn" class="btn-primary">Sign In</button>
+        </div>
+      
+        <!-- AFTER LOGIN -->
+        <div id="job-actions" style="display: none;">
+          <p id="logged-in-email" style="color: #666; text-align: center; margin-bottom: 15px;"></p>
+          <button id="saveJobButton" class="btn-primary">Save Job</button>
+          <button id="logout-btn" class="btn-primary" style="margin-top: 12px;">Log out</button>
+        </div>
+      
+        <!-- SUCCESS/ERROR -->
+        <div id="success-msg" class="fade-in" style="display: none;">
+          <img src="public/success.svg" alt="Success" />
+          <p>Job saved!</p>
+        </div>
+        <div id="error-msg" style="display: none; color: red;">
+          <p>Could not get job info. Please try again.</p>
+        </div>
+      </div>      
+  </body>  
+</html>

@@ -1,15 +1,15 @@
 import { doc, collection, getDocs, getDoc, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "../../firebase.js";
 import React, { useEffect, useState, useRef } from 'react';
 import NavBar from '../components/nav-bar.jsx';
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from 'firebase/auth';
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../../firebase.js";
 import { updateDoc, deleteDoc } from "firebase/firestore";
 import { query, orderBy } from "firebase/firestore";
 
-const TABLE_HEAD = ["Company Name", "Job Title", "Description", "Status", "Date Saved", ""];
+const TABLE_HEAD = ["Company Name", "Job Title", "Description", "Status", "Date Saved", "Job Link", ""];
 const STATUS = ["Saved", "Applied", "Interview", "Offer", "Rejected"];
 
 const Dashboard = () => {
@@ -288,6 +288,11 @@ const JobsTable = ({ jobs, setJobs }) => {
                             minute: '2-digit'
                         })}`
                         : "N/A"}
+                        </td>
+                        <td className="py-4 px-4 align-middle w-32 whitespace-nowrap">
+                        <a href={job.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">
+                            View Job
+                        </a>
                         </td>
                         <td className="py-8 px-4 align-middle">
                             <button className="bg-red-500 text-white rounded px-3 py-1 text-sm hover:bg-red-600" onClick={() => deleteJob(job.id)}>

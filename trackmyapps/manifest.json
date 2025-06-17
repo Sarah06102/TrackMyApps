@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "TrackMyApps",
+  "version": "1.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA89uvDLqZ/yweTQng4ClEiLwCJpuS3GzOYACRepo2vLUWiswptOmRMSaAvVXsCvitJWYhpFIdTwapgPcVN2V1Vex+qGmjCe+OzmW813uxPfy86BuPzfWb+lBIV1+gyc8TwJt8E6fDE33ZQpOYQ7FLqfByGRn9Xj+0ZQCgokCDF6yyFGerWKVQyWwAnB4I6k5mmUqxw05tWK65yI2kVsWHquz77P0LJ0iwYqV+qwEkqSz9lsL3JvJWM1FyYBDjJj+rArTj4Jb8sWC/qKMZO09UI5xiPhfMnZsDk6dzA6N9KoILCdK9nx5FITfE0Dle1qiuBc4sNf7ZhSUaOVYNlPYqGwIDAQAB",
+  "oauth2": {
+    "client_id": "693498453789-kcf2cmrl7pik01p0drnqqmqfipnbhhfk.apps.googleusercontent.com",
+    "scopes": ["profile email", "https://www.googleapis.com/auth/userinfo.email"]
+  },
+  "permissions": [
+    "identity",
+    "identity.email",
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
