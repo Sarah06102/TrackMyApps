@@ -2,19 +2,13 @@
   "manifest_version": 3,
   "name": "TrackMyApps",
   "version": "1.0",
-  "oauth2": {
-    "client_id": "693498453789-kcf2cmrl7pik01p0drnqqmqfipnbhhfk.apps.googleusercontent.com",
-    "scopes": ["profile email", "https://www.googleapis.com/auth/userinfo.email"]
-  },
   "permissions": [
-    "identity",
-    "identity.email",
     "tabs",
     "activeTab",
     "scripting"
   ],
   "host_permissions": [
-    "https://www.googleapis.com/*"
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"
