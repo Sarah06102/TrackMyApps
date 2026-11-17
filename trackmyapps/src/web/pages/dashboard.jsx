@@ -63,6 +63,7 @@ const Dashboard = () => {
     };
 
     const clearAllJobs = async () => {
+        if (!window.confirm(`Delete all ${jobs.length} saved jobs? This can't be undone.`)) return;
         try {
             const user = auth.currentUser;
             if (!user) {
@@ -188,6 +189,8 @@ const JobsTable = ({ jobs, setJobs }) => {
     };
   
     const deleteJob = async (jobId) => {
+      const job = jobs.find((j) => j.id === jobId);
+      if (!window.confirm(`Delete ${job?.jobTitle || "this job"}${job?.companyName ? ` at ${job.companyName}` : ""}?`)) return;
       try {
         const user = auth.currentUser;
         const jobRef = doc(db, "users", user.uid, "jobs", jobId);
