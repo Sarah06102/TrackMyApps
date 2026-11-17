@@ -137,9 +137,7 @@ const Dashboard = () => {
 //Jobs Table
 const JobsTable = ({ jobs, setJobs }) => {
     const [loading, setLoading] = useState(true);
-    const [expandedRows, setExpandedRows] = useState(false);
-    const [descHeights, setDescHeights] = useState({});
-    const descRefs = useRef({});
+    const [expandedRows, setExpandedRows] = useState({});
 
       useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -169,14 +167,6 @@ const JobsTable = ({ jobs, setJobs }) => {
             };
           }, []);
 
-      useEffect(() => {
-        const newHeights = {};
-        Object.entries(descRefs.current).forEach(([id, el]) => {
-          if (el) newHeights[id] = el.scrollHeight;
-        });
-        setDescHeights(newHeights);
-      }, [jobs]);
-    
     const statusChange = async (jobId, newStatus) => {
       try {
         const user = auth.currentUser;
@@ -236,20 +226,17 @@ const JobsTable = ({ jobs, setJobs }) => {
                     const desc = job.jobDesc || "";
                     const cleanDesc = desc.replace(/\n{3,}/g, '\n\n').replace(/(\n\s*){2,}/g, '\n\n').trim();
                     const isExpanded = expandedRows[job.id];
-                    const shortDesc = cleanDesc.length > 100 ? cleanDesc.slice(0, 100) + "..." : cleanDesc;
 
                     return (
 
                     <tr key={job.id} className="border-b hover:bg-gray-50 transition-colors">
                         <td className="py-3 px-4">{job.companyName || "N/A"}</td>
                         <td className="py-3 px-4">{job.jobTitle || "N/A"}</td>
-                        <td className="py-3 px-4 max-w-xs text-sm align-top w-[400px]">
-                            <div ref={(el) => (descRefs[job.id] = el)} className="overflow-y-scroll transition-[max-height] duration-500 ease-in-out overflow-hidden whitespace-pre-line border rounded p-2 pr-2" style={{ maxHeight: expandedRows[job.id] ? `${descHeights[job.id] || 500}px` : "170px"}}>
-                                <div className="whitespace-pre-line pr-2 max-h-[500px]">
-                                    {isExpanded ? cleanDesc : shortDesc}
-                                </div>
+                        <td className="py-3 px-4 text-sm align-top w-[400px] max-w-[400px]">
+                            <div className={`whitespace-pre-line text-gray-700 ${isExpanded ? "max-h-96 overflow-y-auto pr-2" : "line-clamp-3"}`}>
+                                {cleanDesc || <span className="text-gray-400 italic">No description</span>}
                             </div>
-                            {desc.length > 100 && (
+                            {cleanDesc.length > 150 && (
                             <button onClick={() => setExpandedRows((prev) => ({
                                 ...prev,
                                 [job.id]: !prev[job.id],
