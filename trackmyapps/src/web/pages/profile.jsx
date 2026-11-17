@@ -159,7 +159,7 @@ export const Profile = () => {
                         <p className="text-gray-600">{userData?.email}</p>
                     </div>
                     
-                    <div className="grid grid-cols-2 sm:grid-cols-3 text-center gap-x-1 gap-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 text-center gap-8">
                         {/* Resume Upload */}
                         <div>
                             <FaFileAlt className="mx-auto text-2xl text-sky-700 mb-2" />
@@ -213,11 +213,11 @@ export const Profile = () => {
                                     placeholder="https://github.com/yourprofile"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-xl"
                                 />
-                                <button onClick={handleLinkSave} className="mt-4 px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 mx-auto block">
-                                    Save Links
-                                </button>
                             </div>
                         </div>
+                        <button onClick={handleLinkSave} className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 mx-auto block">
+                            Save Links
+                        </button>
                     </div>
 
                     {/* Modal */}
