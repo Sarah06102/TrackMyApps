@@ -1,5 +1,4 @@
 import NavBar from "../components/nav-bar"
-import { Sidebar } from "../components/sidebar"
 import { FaFileAlt, FaFolderOpen, FaEdit } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -153,7 +152,6 @@ export const Profile = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             <NavBar />
-            <Sidebar />
             <>
                 <div className="min-h-[500px] max-w-4xl w-full mx-auto p-10 mt-20 bg-white shadow-md rounded-md space-y-10">
                     <div className="text-center space-y-2">

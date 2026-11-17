@@ -6,7 +6,7 @@ import { LoginAndSignupNavBar } from './login-signup-nav-bar';
 const NavBar = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const isDashboard = location.pathname.startsWith('/dashboard');
+    const isDashboard = location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/profile');
     const isLogin = location.pathname.startsWith('/login');
     const isSignUp = location.pathname.startsWith('/signup')
 
