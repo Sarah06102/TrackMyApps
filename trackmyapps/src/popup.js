@@ -115,8 +115,12 @@ function loadJobPreview() {
 // Save Job to Firestore
 saveBtn.addEventListener('click', async () => {
     const user = auth.currentUser;
-    if (!user || !currentJob) return;
+    if (!user || !currentJob || saveBtn.disabled) return;
     statusText.innerText = '';
+
+    // Prevent double clicks from saving the job twice
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
 
     const jobData = {
       jobTitle: currentJob.jobTitle,
@@ -146,6 +150,8 @@ saveBtn.addEventListener('click', async () => {
     } catch (e) {
       console.error("Error saving job:", e);
       statusText.innerText = "Couldn't save the job. Please try again.";
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Job';
     }
 });
   
