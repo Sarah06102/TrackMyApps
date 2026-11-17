@@ -48,7 +48,8 @@ onAuthStateChanged(auth, (user) => {
       loginContainer.style.display = 'none';
       jobActions.style.display = 'block';
       emailStatus.innerText = `Logged in as ${user.email}`;
-      statusText.innerText = ''; 
+      statusText.innerText = '';
+      loadJobPreview();
     } else {
       loginContainer.style.display = 'block';
       jobActions.style.display = 'none';
@@ -76,55 +77,75 @@ function requestJobInfo(tabId, callback, retried = false) {
     });
 }
 
-// Save Job to Firestore
-saveBtn.addEventListener('click', () => {
-    const user = auth.currentUser;
-    if (!user) return;
-    statusText.innerText = '';
+// Job read from the current tab when the popup opens
+let currentJob = null;
+let currentTab = null;
+
+// Read the job on the current tab and show it in the popup before saving
+function loadJobPreview() {
+    const preview = document.getElementById('job-preview');
+    currentJob = null;
+    saveBtn.disabled = true;
+    preview.textContent = 'Reading job…';
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (!tabs[0]?.id) return;
+      currentTab = tabs[0];
+      if (!currentTab?.id) {
+        preview.textContent = 'No job detected on this page.';
+        return;
+      }
 
-      requestJobInfo(tabs[0].id, async (response) => {
-        console.log("Response from content script:", response);
-  
-        if (!response || !response.jobTitle || !response.companyName) {
-          console.error("Job info not found or incomplete.", response);
-          statusText.innerText = "Couldn't read job details from this page. Open a job posting and try again.";
-          return;
-        }
-
-        const jobData = {
-          jobTitle: response.jobTitle,
-          companyName: response.companyName,
-          jobDesc: response.jobDesc || "",
-          status: "Saved",
-          dateSaved: new Date().toISOString(),
-          url: tabs[0].url
-        };
-  
-        console.log("Final jobData to save:", jobData);
-  
-        try {
-          await addDoc(collection(db, `users/${user.uid}/jobs`), jobData);
-  
-          // Show success message
-          document.getElementById('job-actions').style.display = 'none';
-          const successMsg = document.getElementById('success-msg');
-          successMsg.style.display = 'flex';
-          successMsg.classList.add('fade-in');
-  
-          setTimeout(() => {
-            successMsg.classList.remove('fade-in');
-            successMsg.classList.add('fade-out');
-          }, 2500);
-  
-          setTimeout(() => window.close(), 3000);
-  
-        } catch (e) {
-          console.error("Error saving job:", e);
+      requestJobInfo(currentTab.id, (response) => {
+        if (response?.jobTitle && response?.companyName) {
+          currentJob = response;
+          saveBtn.disabled = false;
+          preview.innerHTML = '';
+          const title = document.createElement('strong');
+          title.textContent = response.jobTitle;
+          const company = document.createElement('span');
+          company.textContent = response.companyName;
+          preview.append(title, company);
+        } else {
+          preview.textContent = 'No job detected on this page. Open a job posting and try again.';
         }
       });
     });
-  });
+}
+
+// Save Job to Firestore
+saveBtn.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user || !currentJob) return;
+    statusText.innerText = '';
+
+    const jobData = {
+      jobTitle: currentJob.jobTitle,
+      companyName: currentJob.companyName,
+      jobDesc: currentJob.jobDesc || "",
+      status: "Saved",
+      dateSaved: new Date().toISOString(),
+      url: currentTab.url
+    };
+
+    try {
+      await addDoc(collection(db, `users/${user.uid}/jobs`), jobData);
+
+      // Show success message
+      document.getElementById('job-actions').style.display = 'none';
+      const successMsg = document.getElementById('success-msg');
+      successMsg.style.display = 'flex';
+      successMsg.classList.add('fade-in');
+
+      setTimeout(() => {
+        successMsg.classList.remove('fade-in');
+        successMsg.classList.add('fade-out');
+      }, 2500);
+
+      setTimeout(() => window.close(), 3000);
+
+    } catch (e) {
+      console.error("Error saving job:", e);
+      statusText.innerText = "Couldn't save the job. Please try again.";
+    }
+});
   

@@ -173,3 +173,26 @@ input {
 .btn-primary:hover {
   background-color: #357ae8;
 }
+.job-preview {
+  background: #f1f3f4;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #5f6368;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.job-preview strong {
+  display: block;
+  color: #202124;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.btn-primary:disabled {
+  background-color: #a8c7fa;
+  cursor: not-allowed;
+  transform: none;
+}
