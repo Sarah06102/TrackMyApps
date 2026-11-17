@@ -15,6 +15,8 @@ export const Profile = () => {
     const auth = getAuth();
     const user = auth.currentUser;
     const [resumeFile, setResumeFile] = useState(null);
+    const [editingResume, setEditingResume] = useState(false);
+    const [resumeLinkInput, setResumeLinkInput] = useState('');
     const [portfolioFile, setPortfolioFile] = useState(null);
     const [portfolioLink, setPortfolioLink] = useState('');
     const [showPortfolioModal, setShowPortfolioModal] = useState(false);
@@ -57,19 +59,25 @@ export const Profile = () => {
         return () => unsubscribe();
     }, []);
 
-    const handleResumeUpload = async (file) => {
+    // Resume is stored as a link (e.g. Google Drive) rather than an uploaded file
+    const handleResumeLinkSave = async () => {
         if (!user) return;
-      
-        const storageRef = ref(storage, `resumes/${user.uid}/${file.name}`);
-        await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(storageRef);
-      
-        await updateDoc(doc(db, "users", user.uid), {
-          resumeURL: downloadURL,
-          resumeName: file.name 
-        });
-      
-        setResumeFile({ name: file.name, url: downloadURL });
+        const link = resumeLinkInput.trim();
+        if (!/^https?:\/\//i.test(link)) {
+            alert("Please enter a full link starting with https://");
+            return;
+        }
+        try {
+            await updateDoc(doc(db, "users", user.uid), {
+                resumeURL: link,
+                resumeName: "View Resume",
+            });
+            setResumeFile({ name: "View Resume", url: link });
+            setEditingResume(false);
+        } catch (error) {
+            console.error("Error saving resume link:", error);
+            alert("Failed to save resume link.");
+        }
     };
 
     const handleLinkSave = async () => {
@@ -163,11 +171,29 @@ export const Profile = () => {
                         {/* Resume Upload */}
                         <div>
                             <FaFileAlt className="mx-auto text-2xl text-sky-700 mb-2" />
-                            <label htmlFor="cvUpload" className="cursor-pointer text-sky-700 font-semibold hover:underline">
-                                Upload Resume/CV
-                            </label>
-                            <input type="file" id="cvUpload" className="hidden" onChange={(e) => { setResumeFile(e.target.files[0]); handleResumeUpload(e.target.files[0]);}} accept=".pdf" />
-                            {resumeFile?.url && (
+                            <button
+                                onClick={() => { setResumeLinkInput(resumeFile?.url || ''); setEditingResume(!editingResume); }}
+                                className="text-sky-700 font-semibold hover:underline"
+                            >
+                                {resumeFile?.url ? "Edit Resume Link" : "Add Resume Link"}
+                            </button>
+                            {editingResume && (
+                                <div className="mt-2 flex gap-2 max-w-sm mx-auto">
+                                    <input
+                                        type="url"
+                                        value={resumeLinkInput}
+                                        onChange={(e) => setResumeLinkInput(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleResumeLinkSave()}
+                                        placeholder="https://drive.google.com/..."
+                                        className="flex-1 min-w-0 px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                        autoFocus
+                                    />
+                                    <button onClick={handleResumeLinkSave} className="px-3 py-1.5 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700">
+                                        Save
+                                    </button>
+                                </div>
+                            )}
+                            {!editingResume && resumeFile?.url && (
                                 <p className="text-sm mt-1 text-green-600">
                                     <a href={resumeFile.url} target="_blank" rel="noopener noreferrer">
                                     {resumeFile.name || "View Resume"}
