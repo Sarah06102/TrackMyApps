@@ -9,7 +9,6 @@ const statusText = document.getElementById('status');
 const loginContainer = document.getElementById('login-container');
 const jobActions = document.getElementById('job-actions');
 const logoutBtn = document.getElementById('logout-btn');
-const userEmailText = document.getElementById('user-email');
 const emailStatus = document.getElementById('logged-in-email');
 const saveBtn = document.getElementById('saveJobButton');
 
@@ -19,7 +18,7 @@ loginBtn.addEventListener('click', async () => {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    userEmailText.textContent = `Logged in as ${auth.currentUser.email}`;
+    emailStatus.textContent = `Logged in as ${auth.currentUser.email}`;
     // Hide login UI
     loginContainer.style.display = 'none';
     statusText.innerText = '';
@@ -36,7 +35,7 @@ loginBtn.addEventListener('click', async () => {
 logoutBtn.addEventListener('click', async () => {
     try {
       await signOut(auth);
-      userEmailText.textContent = '';
+      emailStatus.textContent = '';
       loginContainer.style.display = 'block';
       jobActions.style.display = 'none';
     } catch (error) {
@@ -58,26 +57,47 @@ onAuthStateChanged(auth, (user) => {
     }
   });
   
+// Ask the content script for job info. If it isn't in the tab yet (tab was
+// open before the extension loaded/reloaded), inject it and ask again.
+function requestJobInfo(tabId, callback, retried = false) {
+    chrome.tabs.sendMessage(tabId, { action: "getJobInfo" }, (response) => {
+      if (chrome.runtime.lastError && !retried) {
+        chrome.scripting.executeScript({ target: { tabId }, files: ["content.js"] }, () => {
+          if (chrome.runtime.lastError) {
+            console.error("Could not inject content script:", chrome.runtime.lastError.message);
+            callback(undefined);
+            return;
+          }
+          requestJobInfo(tabId, callback, true);
+        });
+        return;
+      }
+      callback(response);
+    });
+}
+
 // Save Job to Firestore
 saveBtn.addEventListener('click', () => {
     const user = auth.currentUser;
     if (!user) return;
-  
+    statusText.innerText = '';
+
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (!tabs[0]?.id) return;
-  
-      chrome.tabs.sendMessage(tabs[0].id, { action: "getJobInfo" }, async (response) => {
+
+      requestJobInfo(tabs[0].id, async (response) => {
         console.log("Response from content script:", response);
   
-        if (!response || !response.jobTitle || !response.companyName || !response.jobDesc) {
-          console.error("Job info not found or incomplete.");
+        if (!response || !response.jobTitle || !response.companyName) {
+          console.error("Job info not found or incomplete.", response);
+          statusText.innerText = "Couldn't read job details from this page. Open a job posting and try again.";
           return;
         }
-  
+
         const jobData = {
           jobTitle: response.jobTitle,
           companyName: response.companyName,
-          jobDesc: response.jobDesc,
+          jobDesc: response.jobDesc || "",
           status: "Saved",
           dateSaved: new Date().toISOString(),
           url: tabs[0].url
