@@ -148,6 +148,7 @@ saveBtn.addEventListener('click', async () => {
       companyName: currentJob.companyName,
       jobDesc: currentJob.jobDesc || "",
       status: "Saved",
+      seen: false, // dashboard highlights it as "New" until it's been shown once
       dateSaved: new Date().toISOString(),
       url: currentTab.url
     };

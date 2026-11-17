@@ -160,24 +160,11 @@ const JobsTable = ({ jobs, setJobs }) => {
     const [loading, setLoading] = useState(true);
     const [expandedRows, setExpandedRows] = useState({});
 
-    // Jobs saved after the previous dashboard load get a "New" highlight.
-    // Read the last visit once (pure), then record this visit in an effect.
-    const [lastVisit] = useState(() => {
-        try {
-            const saved = localStorage.getItem("dashboardLastVisit");
-            return saved ? Number(saved) : null;
-        } catch {
-            return null;
-        }
-    });
-    // Record the visit on load and again whenever jobs change while the page is
-    // open, so jobs that arrived live count as seen and clear on the next refresh
-    useEffect(() => {
-        try {
-            localStorage.setItem("dashboardLastVisit", String(Date.now()));
-        } catch { /* storage unavailable - highlights just won't persist */ }
-    }, [jobs]);
-    const isNew = (job) => lastVisit !== null && job.dateSaved && new Date(job.dateSaved).getTime() > lastVisit;
+    // Jobs saved by the popup arrive with seen: false. We highlight them for the
+    // rest of this page load and mark them seen in Firestore, so the next
+    // refresh (on any browser or device) shows them as normal.
+    const [newJobIds, setNewJobIds] = useState(() => new Set());
+    const isNew = (job) => newJobIds.has(job.id);
 
       useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -195,6 +182,15 @@ const JobsTable = ({ jobs, setJobs }) => {
                 }));
                 setJobs(jobsList);
                 setLoading(false);
+
+                const unseen = jobsList.filter((job) => job.seen === false);
+                if (unseen.length > 0) {
+                    setNewJobIds((prev) => new Set([...prev, ...unseen.map((job) => job.id)]));
+                    unseen.forEach((job) => {
+                        updateDoc(doc(db, "users", user.uid, "jobs", job.id), { seen: true })
+                            .catch((error) => console.error("Failed to mark job as seen:", error));
+                    });
+                }
               });
           
               return () => {
