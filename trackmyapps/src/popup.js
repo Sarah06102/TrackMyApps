@@ -1,6 +1,6 @@
 import { auth, db } from './firebase-extension.js';
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, query, where, limit, getDocs } from 'firebase/firestore';
 
 const loginBtn = document.getElementById('login-btn');
 const emailInput = document.getElementById('email');
@@ -81,6 +81,25 @@ function requestJobInfo(tabId, callback, retried = false) {
 let currentJob = null;
 let currentTab = null;
 
+// Same title + company already on the dashboard? (URLs differ for the same
+// LinkedIn job depending on which page it was opened from, so don't match on URL)
+async function isAlreadySaved(job) {
+    const user = auth.currentUser;
+    if (!user) return false;
+    try {
+      const q = query(
+        collection(db, `users/${user.uid}/jobs`),
+        where('jobTitle', '==', job.jobTitle),
+        where('companyName', '==', job.companyName),
+        limit(1)
+      );
+      return !(await getDocs(q)).empty;
+    } catch (e) {
+      console.error("Duplicate check failed:", e);
+      return false;
+    }
+}
+
 // Read the job on the current tab and show it in the popup before saving
 function loadJobPreview() {
     const preview = document.getElementById('job-preview');
@@ -95,10 +114,12 @@ function loadJobPreview() {
         return;
       }
 
-      requestJobInfo(currentTab.id, (response) => {
+      requestJobInfo(currentTab.id, async (response) => {
         if (response?.jobTitle && response?.companyName) {
           currentJob = response;
-          saveBtn.disabled = false;
+          const alreadySaved = await isAlreadySaved(response);
+          saveBtn.disabled = alreadySaved;
+          saveBtn.textContent = alreadySaved ? 'Already saved' : 'Save Job';
           preview.innerHTML = '';
           const title = document.createElement('strong');
           title.textContent = response.jobTitle;
