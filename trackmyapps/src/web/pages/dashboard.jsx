@@ -170,11 +170,13 @@ const JobsTable = ({ jobs, setJobs }) => {
             return null;
         }
     });
+    // Record the visit on load and again whenever jobs change while the page is
+    // open, so jobs that arrived live count as seen and clear on the next refresh
     useEffect(() => {
         try {
             localStorage.setItem("dashboardLastVisit", String(Date.now()));
         } catch { /* storage unavailable - highlights just won't persist */ }
-    }, []);
+    }, [jobs]);
     const isNew = (job) => lastVisit !== null && job.dateSaved && new Date(job.dateSaved).getTime() > lastVisit;
 
       useEffect(() => {
