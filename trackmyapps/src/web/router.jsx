@@ -5,10 +5,12 @@ import Login from './pages/auth/login.jsx'
 import Home from './pages/home.jsx';
 import SignUp from './pages/auth/signup.jsx'
 import Dashboard from './pages/dashboard.jsx';
+import { Profile } from './pages/profile.jsx';
 
 export const router = createBrowserRouter([
     { path: "/", element: <Home />}, 
     { path: "/login", element: <Login />},
     { path: "/signup", element: <SignUp />},
     { path: "/dashboard", element: <Dashboard />},
+    { path: "/profile", element: <Profile />},
   ]);
