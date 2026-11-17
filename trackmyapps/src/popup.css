@@ -196,3 +196,19 @@ input {
   cursor: not-allowed;
   transform: none;
 }
+
+.link-btn {
+  background: none;
+  color: #5f6368;
+  font-size: 13px;
+  padding: 4px 8px;
+  margin: 8px auto 0;
+  width: auto;
+  text-decoration: underline;
+}
+
+.link-btn:hover {
+  background: none;
+  color: #202124;
+  transform: none;
+}
