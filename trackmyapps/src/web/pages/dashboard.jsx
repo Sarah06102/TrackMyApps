@@ -9,7 +9,7 @@ import { auth } from "../../firebase.js";
 import { updateDoc, deleteDoc } from "firebase/firestore";
 import { query, orderBy } from "firebase/firestore";
 
-const TABLE_HEAD = ["Company Name", "Job Title", "Description", "Status", "Date Saved", "Job Link", ""];
+const TABLE_HEAD = ["Company Name", "Job Title", "Description", "Status", "Date Saved", ""];
 const STATUS = ["Saved", "Applied", "Interview", "Offer", "Rejected"];
 
 const Dashboard = () => {
@@ -228,7 +228,13 @@ const JobsTable = ({ jobs, setJobs }) => {
 
                     <tr key={job.id} className="border-b hover:bg-gray-50 transition-colors">
                         <td className="py-3 px-4">{job.companyName || "N/A"}</td>
-                        <td className="py-3 px-4">{job.jobTitle || "N/A"}</td>
+                        <td className="py-3 px-4">
+                            {job.url ? (
+                                <a href={job.url} target="_blank" rel="noopener noreferrer" className="text-sky-700 font-medium hover:underline">
+                                    {job.jobTitle || "N/A"}
+                                </a>
+                            ) : (job.jobTitle || "N/A")}
+                        </td>
                         <td className="py-3 px-4 text-sm align-top w-[400px] max-w-[400px]">
                             <div className={`whitespace-pre-line text-gray-700 ${isExpanded ? "max-h-96 overflow-y-auto pr-2" : "line-clamp-3"}`}>
                                 {cleanDesc || <span className="text-gray-400 italic">No description</span>}
@@ -275,11 +281,6 @@ const JobsTable = ({ jobs, setJobs }) => {
                             minute: '2-digit'
                         })}`
                         : "N/A"}
-                        </td>
-                        <td className="py-4 px-4 align-middle w-32 whitespace-nowrap">
-                        <a href={job.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">
-                            View Job
-                        </a>
                         </td>
                         <td className="py-8 px-4 align-middle">
                             <button className="bg-red-500 text-white rounded px-3 py-1 text-sm hover:bg-red-600" onClick={() => deleteJob(job.id)}>
