@@ -11,6 +11,13 @@ import { query, orderBy } from "firebase/firestore";
 
 const TABLE_HEAD = ["Company Name", "Job Title", "Description", "Status", "Date Saved", ""];
 const STATUS = ["Saved", "Applied", "Interview", "Offer", "Rejected"];
+const STATUS_COLORS = {
+    Saved: "bg-gray-100 text-gray-800",
+    Applied: "bg-blue-100 text-blue-800",
+    Interview: "bg-yellow-100 text-yellow-800",
+    Offer: "bg-green-100 text-green-800",
+    Rejected: "bg-red-100 text-red-800",
+};
 
 const Dashboard = () => {
     const [jobs, setJobs] = useState([]);
@@ -125,6 +132,23 @@ const Dashboard = () => {
                         </button>
                     )}
                     </div>
+                {jobs.length > 0 && (
+                    <div className="flex flex-wrap gap-2 px-6 mb-4">
+                        {STATUS.map((status) => {
+                            const count = jobs.filter((job) => job.status === status).length;
+                            const active = appliedStatusFilter === status;
+                            return (
+                                <button
+                                    key={status}
+                                    onClick={() => setAppliedStatusFilter(active ? '' : status)}
+                                    className={`px-3 py-1 rounded-full text-sm font-medium border transition ${STATUS_COLORS[status]} ${active ? "ring-2 ring-offset-1 ring-sky-500" : "border-transparent hover:opacity-80"}`}
+                                >
+                                    {count} {status}
+                                </button>
+                            );
+                        })}
+                    </div>
+                )}
                 <JobsTable jobs={filteredJobs} setJobs={setJobs} />
             </div>
         </div>  
@@ -250,21 +274,7 @@ const JobsTable = ({ jobs, setJobs }) => {
                         )}
                         </td>
                         <td className="py-3 px-4 align-middle">
-                            <select className={`cursor-pointer border rounded px-2 py-1 text-sm font-medium
-                                    ${
-                                    job.status === "Saved"
-                                        ? "bg-gray-100 text-gray-800"
-                                        : job.status === "Applied"
-                                        ? "bg-blue-100 text-blue-800"
-                                        : job.status === "Interview"
-                                        ? "bg-yellow-100 text-yellow-800"
-                                        : job.status === "Offer"
-                                        ? "bg-green-100 text-green-800"
-                                        : job.status === "Rejected"
-                                        ? "bg-red-100 text-red-800"
-                                        : ""
-                                    }
-                                `}
+                            <select className={`cursor-pointer border rounded px-2 py-1 text-sm font-medium ${STATUS_COLORS[job.status] || ""}`}
                                 value={job.status} onChange={(e) => statusChange(job.id, e.target.value)}>
                                 {STATUS.map((status) => (
                                 <option key={status} value={status}>{status}</option>
