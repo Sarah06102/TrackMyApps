@@ -160,6 +160,23 @@ const JobsTable = ({ jobs, setJobs }) => {
     const [loading, setLoading] = useState(true);
     const [expandedRows, setExpandedRows] = useState({});
 
+    // Jobs saved after the previous dashboard load get a "New" highlight.
+    // Read the last visit once (pure), then record this visit in an effect.
+    const [lastVisit] = useState(() => {
+        try {
+            const saved = localStorage.getItem("dashboardLastVisit");
+            return saved ? Number(saved) : null;
+        } catch {
+            return null;
+        }
+    });
+    useEffect(() => {
+        try {
+            localStorage.setItem("dashboardLastVisit", String(Date.now()));
+        } catch { /* storage unavailable - highlights just won't persist */ }
+    }, []);
+    const isNew = (job) => lastVisit !== null && job.dateSaved && new Date(job.dateSaved).getTime() > lastVisit;
+
       useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) return;
@@ -250,7 +267,7 @@ const JobsTable = ({ jobs, setJobs }) => {
 
                     return (
 
-                    <tr key={job.id} className="border-b hover:bg-gray-50 transition-colors">
+                    <tr key={job.id} className={`border-b transition-colors ${isNew(job) ? "bg-sky-50 hover:bg-sky-100" : "hover:bg-gray-50"}`}>
                         <td className="py-3 px-4">{job.companyName || "N/A"}</td>
                         <td className="py-3 px-4">
                             {job.url ? (
@@ -258,6 +275,9 @@ const JobsTable = ({ jobs, setJobs }) => {
                                     {job.jobTitle || "N/A"}
                                 </a>
                             ) : (job.jobTitle || "N/A")}
+                            {isNew(job) && (
+                                <span className="ml-2 align-middle text-xs font-semibold bg-sky-600 text-white px-2 py-0.5 rounded-full">New</span>
+                            )}
                         </td>
                         <td className="py-3 px-4 text-sm align-top w-[400px] max-w-[400px]">
                             <div className={`whitespace-pre-line text-gray-700 ${isExpanded ? "max-h-96 overflow-y-auto pr-2" : "line-clamp-3"}`}>
