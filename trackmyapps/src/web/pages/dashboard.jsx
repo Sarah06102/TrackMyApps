@@ -15,7 +15,6 @@ const STATUS = ["Saved", "Applied", "Interview", "Offer", "Rejected"];
 const Dashboard = () => {
     const [jobs, setJobs] = useState([]);
     const navigate = useNavigate();
-    const [statusFilter, setStatusFilter] = useState('');
     const [userData, setUserData] = useState(null);
     const [appliedStatusFilter, setAppliedStatusFilter] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
@@ -83,8 +82,9 @@ const Dashboard = () => {
     };
 
     const filteredJobs = jobs.filter(job => {
-        const matchesSearch = job.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              job.jobTitle.toLowerCase().includes(searchTerm.toLowerCase());
+        const term = searchTerm.toLowerCase();
+        const matchesSearch = (job.companyName || '').toLowerCase().includes(term) ||
+                              (job.jobTitle || '').toLowerCase().includes(term);
         const matchesStatus = appliedStatusFilter ? job.status === appliedStatusFilter : true;
         return matchesSearch && matchesStatus;
       });
@@ -107,22 +107,19 @@ const Dashboard = () => {
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-6 mb-6">
                     <input type="text" placeholder="Search by company or job title" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="px-4 py-2 border rounded-lg w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-500"/>
 
-                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="px-4 py-2 border rounded-lg w-full md:w-1/4 focus:outline-none focus:ring-2 focus:ring-sky-500">
-                        <option value="">Filter by Status</option>
+                    <select value={appliedStatusFilter} onChange={(e) => setAppliedStatusFilter(e.target.value)} className="px-4 py-2 border rounded-lg w-full md:w-1/4 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        <option value="">All Statuses</option>
                         {STATUS.map(status => (
                             <option key={status} value={status}>{status}</option>
                         ))}
                     </select>
-                    <button onClick={() => setAppliedStatusFilter(statusFilter)} className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg">
-                        Apply Filters
-                    </button>
 
-                    {appliedStatusFilter && (
+                    {(appliedStatusFilter || searchTerm) && (
                         <button onClick={() => {
-                            setAppliedStatusFilter(false);
-                            setStatusFilter('');
+                            setAppliedStatusFilter('');
+                            setSearchTerm('');
                         }}
-                        className="text-sm text-gray-600 underline"
+                        className="text-sm text-gray-600 underline whitespace-nowrap"
                         >
                         Clear Filters
                         </button>
